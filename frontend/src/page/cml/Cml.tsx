@@ -15,6 +15,9 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronUp,
   EllipsisVerticalIcon,
   SquareChartGantt,
   SquarePen,
@@ -24,27 +27,32 @@ import {
 import AddCmlModal from "./AddCmlModal";
 import EditCmlModal from "./EditCmlModal";
 
-const columnHelper = createColumnHelper<ICml>();
+interface Cmlcus extends ICml {
+  line_number?: string;
+}
+
+
+const columnHelper = createColumnHelper<Cmlcus>();
 
 function Cmldetail() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
-  const [cmlData, setCmlData] = useState<ICml[]>([]);
+  const [cmlData, setCmlData] = useState<Cmlcus[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
-  const [infoLineNumber, setInfoLineNumber] = useState<string>("");
+ 
   
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingCml, setEditingCml] = useState<ICml | null>(null);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [editingCml, setEditingCml] = useState<Cmlcus | null>(null);
+ 
 
 
 
@@ -54,8 +62,9 @@ function Cmldetail() {
     try {
       console.log("ID:", id);
       const res = await getcmlbyinfoID(Number(id));
-      setCmlData(res.cml);
-      setInfoLineNumber(res.info);
+      console.log("CML Data:", res);
+      setCmlData(res);
+    
     } catch (error) {
       console.error("Error fetching CML data:", error);
     } finally {
@@ -74,6 +83,10 @@ function Cmldetail() {
   
 
   const columns = [
+    columnHelper.accessor("line_number", {
+      header: "Line Number",
+      cell: (info) => <span className="font-semibold">{info.getValue()}</span>,
+    }),
     columnHelper.accessor("cml_number", {
       header: "CML Number",
       cell: (info) => <span className="font-semibold">{info.getValue()}</span>,
@@ -179,7 +192,7 @@ function Cmldetail() {
   };
 
   return (
-    <div className="p-6"> const [showErrorAlert, setShowErrorAlert] = useState(false);
+    <div className="p-6"> 
          {/* Success Alert */}
       {showAlert && (
         <div className="fixed top-4 right-4 z-50 max-w-md">
@@ -214,18 +227,10 @@ function Cmldetail() {
         </div>
       )}
       <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold mb-4">
-            Line Number:{" "}
-            <span className="text-[#EB1950] font-extrabold">
-              {infoLineNumber}
-            </span>
-          </h2>
-          <p className="mb-6">
-            Here are the details of the CMLs associated with the selected Info
-            line number.
-          </p>
-        </div>
+      <button className=" gap-2 text-[#EB1950] bg-gray-100 rounded-2xl p-2 " onClick={() => navigate(-1)}>
+        <ChevronLeft className="w-8 h-8" />
+        </button>
+        
         <button
           className="btn gap-2 text-white"
           style={{ backgroundColor: "#14094D" }}
@@ -247,9 +252,19 @@ function Cmldetail() {
           Add CML
         </button>
       </div>
+      
 
       {/* Search and Page Size */}
-      <div className="mb-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-end">
+      <div className="mb-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+      <div>
+          <h2 className="text-2xl font-bold mb-4">
+            Line Number:{" "}
+            <span className="text-[#EB1950] font-extrabold">
+              {cmlData[0].line_number}
+            </span>
+          </h2>
+         
+        </div>
         <div className="flex items-center gap-2">
           <span className="text-sm">แสดง:</span>
           <select
@@ -290,8 +305,8 @@ function Cmldetail() {
                           header.getContext()
                         )}
                         {{
-                          asc: " 🔼",
-                          desc: " 🔽",
+                          asc: <ChevronUp className="inline-block ml-4 w-6 h-6" />,
+                          desc: <ChevronDown className="inline-block ml-4 w-6 h-6" />,
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     )}

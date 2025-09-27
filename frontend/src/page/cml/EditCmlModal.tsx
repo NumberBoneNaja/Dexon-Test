@@ -45,15 +45,17 @@ const EditCmlModal: React.FC<EditCmlModalProps> = ({
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name.includes("thickness") || name === "actual_outside_diameter" 
-        ? Number(value) 
-        : value,
+      [name]: name.includes("thickness") || name === "actual_outside_diameter" || name === "cml_number"
+      ? Number(value)
+      : value,
+
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      console.log("test",formData);
       const res = await UpdateCmlByID(formData, formData.ID!);
       if (!res) {
         setShowErrorAlert(true);

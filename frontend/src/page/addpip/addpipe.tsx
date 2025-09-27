@@ -79,7 +79,7 @@ const AddPipe: React.FC = () => {
           operating_temperature: 0,
         });
   
-        navigate('/info');
+        
       } else {
         setErrorMessage(res?.error || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
         const modal = document.getElementById('error_modal') as HTMLDialogElement;
@@ -239,38 +239,28 @@ const AddPipe: React.FC = () => {
                   <label className="label">
                     <span className="label-text font-medium">Service</span>
                   </label>
-                  <select
+                  <input
                     name="service"
                     value={formData.service}
                     onChange={handleInputChange}
-                    className="select select-bordered w-full"
+                    className="input input-bordered w-full"
                   >
-                    <option value="">เลือกประเภทการใช้งาน</option>
-                    <option value="Water">Water</option>
-                    <option value="Steam">Steam</option>
-                    <option value="Oil">Oil</option>
-                    <option value="Gas">Gas</option>
-                    <option value="Chemical">Chemical</option>
-                  </select>
+                    
+                  </input>
                 </div>
 
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text font-medium">Material</span>
                   </label>
-                  <select
+                  <input
                     name="material"
                     value={formData.material}
                     onChange={handleInputChange}
-                    className="select select-bordered w-full"
+                    className="input input-bordered w-full"
                   >
-                    <option value="">เลือกวัสดุ</option>
-                    <option value="Carbon Steel">Carbon Steel</option>
-                    <option value="Stainless Steel">Stainless Steel</option>
-                    <option value="Alloy Steel">Alloy Steel</option>
-                    <option value="PVC">PVC</option>
-                    <option value="HDPE">HDPE</option>
-                  </select>
+                   
+                  </input>
                 </div>
 
                 <div className="form-control">
@@ -306,7 +296,7 @@ const AddPipe: React.FC = () => {
                     className="input input-bordered w-full"
                     placeholder="ความหนาเดิม"
                     min="0"
-                    step="0.1"
+                    step="1"
                   />
                 </div>
 
@@ -353,7 +343,7 @@ const AddPipe: React.FC = () => {
                     className="input input-bordered w-full"
                     placeholder="Corrosion Allowance"
                     min="0"
-                    step="0.1"
+                    step="1"
                   />
                 </div>
 
@@ -390,7 +380,7 @@ const AddPipe: React.FC = () => {
                     className="input input-bordered w-full"
                     placeholder="ความดันออกแบบ"
                     min="0"
-                    step="0.1"
+                    step="1"
                   />
                 </div>
 
@@ -406,7 +396,7 @@ const AddPipe: React.FC = () => {
                     className="input input-bordered w-full"
                     placeholder="ความดันใช้งาน"
                     min="0"
-                    step="0.1"
+                    step="1"
                   />
                 </div>
 
@@ -473,7 +463,7 @@ const AddPipe: React.FC = () => {
               onClick={() => {
                 const modal = document.getElementById('success_modal') as HTMLDialogElement;
                 modal?.close();
-                // navigate('/info');
+                navigate('/info');
               }}
             >
               ตกลง

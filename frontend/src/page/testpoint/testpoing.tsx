@@ -14,19 +14,22 @@ import {
   type PaginationState,
   type SortingState,
 } from "@tanstack/react-table";
-import { EllipsisVerticalIcon, SquareChartGantt, SquarePen, Trash, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronUp, EllipsisVerticalIcon, SquareChartGantt, SquarePen, Trash, X } from "lucide-react";
 import AddTestPointModal from "./addTestpoint";
 import EditTestPointModal from "./EditTestPointModal";
 
-const columnHelper = createColumnHelper<ITestpoint>();
-const cmlColumnHelper = createColumnHelper<ICml>();
+const columnHelper = createColumnHelper<TestpointCus>();
 
+interface TestpointCus extends ITestpoint {
+  line_number: string;
+  cml_number: number;
+}
 function Testpoint() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
   const [cmlData, setCmlData] = useState<ICml | null>(null);
-  const [testpointData, setTestpointData] = useState<ITestpoint[]>([]);
+  const [testpointData, setTestpointData] = useState<TestpointCus[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -151,6 +154,14 @@ const [editingTestPoint, setEditingTestPoint] = useState<ITestpoint | null>(null
  
 
   const columns = [
+    columnHelper.accessor("line_number", {
+      header: "Line Number",
+      cell: (info) => <span className="font-semibold">{info.getValue()}</span>,
+    }),
+    columnHelper.accessor("cml_number", {
+      header: "CML Number",
+      cell: (info) => <span className="font-semibold">{info.getValue()}</span>,
+    }),
     columnHelper.accessor("tp_number", {
       header: "TP Number",
       cell: (info) => <span className="font-semibold">{info.getValue()}</span>,
@@ -172,6 +183,7 @@ const [editingTestPoint, setEditingTestPoint] = useState<ITestpoint | null>(null
               tabIndex={0} 
               role="button" 
               className="btn btn-ghost btn-xs"
+              
               onBlur={(e) => {
                 setTimeout(() => {
                   if (!e.currentTarget.contains(document.activeElement)) {
@@ -185,7 +197,10 @@ const [editingTestPoint, setEditingTestPoint] = useState<ITestpoint | null>(null
             <ul
               tabIndex={0}
               className="dropdown-content menu bg-base-100 rounded-box z-50 w-52 p-2 shadow-lg "
-              style={{ position: 'absolute', right: 0 }}
+              style={{
+                position: 'fixed',
+                transform: 'translateX(-100px)'
+              }}
             >
               <li>
                 <button 
@@ -304,7 +319,10 @@ const [editingTestPoint, setEditingTestPoint] = useState<ITestpoint | null>(null
 
       {/* Header with Add Button */}
       <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h3 className="text-lg font-semibold">Test Points</h3>
+      <button className=" gap-2 text-[#EB1950] bg-gray-100 rounded-2xl p-2 " onClick={() => navigate(-1)}>
+        <ChevronLeft className="w-8 h-8" />
+        </button>
+        
         <button
           className="btn gap-2 text-white"
           style={{ backgroundColor: "#14094D" }}
@@ -328,7 +346,8 @@ const [editingTestPoint, setEditingTestPoint] = useState<ITestpoint | null>(null
       </div>
 
       {/* Search and Page Size */}
-      <div className="mb-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-end">
+      <div className="mb-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+      <h3 className="text-lg font-semibold">Test Points</h3>
         <div className="flex items-center gap-2">
           <span className="text-sm">แสดง:</span>
           <select
@@ -369,8 +388,8 @@ const [editingTestPoint, setEditingTestPoint] = useState<ITestpoint | null>(null
                           header.getContext()
                         )}
                         {{
-                          asc: " 🔼",
-                          desc: " 🔽",
+                              asc: <ChevronUp className="inline-block ml-4 w-6 h-6" />,
+                              desc: <ChevronDown className="inline-block ml-4 w-6 h-6" />,
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     )}

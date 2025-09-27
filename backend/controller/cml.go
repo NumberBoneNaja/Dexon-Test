@@ -67,33 +67,42 @@ func getNextCMLNumber(infoID uint) (int, error) {
 }
 
 func GetCMLByInfoID(c *fiber.Ctx) error {
-	ID := c.Params("id")
-	if ID == "" {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"error": "ID is required",
-		})
-	}
-	var info entity.Info
-	DB := config.DB()
-	info_result := DB.Where("id = ?", ID).First(&info)
-	if info_result.Error != nil {
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"error": info_result.Error.Error(),
-		})
-	}
+    ID := c.Params("id")
+    if ID == "" {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+            "error": "ID is required",
+        })
+    }
 
-	var cml []entity.CML
-	
-	result := DB.Where("info_id = ?", ID).Find(&cml)
-	if result.Error != nil {
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"error": result.Error.Error(),
-		})
-	}
-	return c.JSON(fiber.Map{
-		"info": info.LineNumber,
-		"cml":  cml,
-	})
+    DB := config.DB()
+
+    // สร้าง struct สำหรับผลลัพธ์
+    type Result struct {
+		ID                   uint
+        LineNumber           string  `json:"line_number"`
+        CmlNumber            int  `json:"cml_number"`
+        CmlDescription       string  `json:"cml_description"`
+        ActualOutsideDiameter int `json:"actual_outside_diameter"`
+        DesignThickness      int `json:"design_thickness"`
+        StructuralThickness  int `json:"structural_thickness"`
+        RequiredThickness    int `json:"required_thickness"`
+    }
+
+    var results []Result
+
+    err := DB.Table("infos").
+        Select("cmls.id, infos.line_number, cmls.cml_number, cmls.cml_description, cmls.actual_outside_diameter, cmls.design_thickness, cmls.structural_thickness, cmls.required_thickness").
+        Joins("join cmls on infos.id = cmls.info_id").
+        Where("infos.id = ? AND cmls.deleted_at IS NULL", ID).
+        Scan(&results).Error
+
+    if err != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+            "error": err.Error(),
+        })
+    }
+
+    return c.JSON(results)
 }
 
 func GetCMLByID(c *fiber.Ctx) error {
@@ -214,6 +223,7 @@ func EditCMLByID(c *fiber.Ctx) error {
 		})
 	}
 	if err := c.BodyParser(&cml); err != nil {
+		fmt.Println("c.BodyParser error:", err)
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
 			"error": "Cannot parse JSON",
 		})

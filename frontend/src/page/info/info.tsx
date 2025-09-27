@@ -16,7 +16,7 @@ import type { IInfo } from "../../interface/info"
 import { DeletePipe, getAllInfo } from "../../service/info/index"
 import InfoModal from "./modalinfo"
 import { useNavigate } from "react-router-dom"
-import { EllipsisVerticalIcon } from "lucide-react"
+import { ChevronDown, ChevronUp, EllipsisVerticalIcon, Trash } from "lucide-react"
 
 const columnHelper = createColumnHelper<IInfo>()
 
@@ -124,6 +124,11 @@ function Info() {
                   Detail
                 </button>
               </li>
+              <li>
+                <button className="text-sm" onClick={() => handleDelete(item.ID!)}>
+                  <Trash className="w-4 h-4" /> Delete
+                </button>
+              </li>
             </ul>
           </div>
         )
@@ -162,6 +167,7 @@ function Info() {
  
     try {
       console.log("Deleting pipeline with ID:", id)
+      alert("Are you sure you want to delete this pipeline?")
       await DeletePipe(id)
       // Refresh the list after deletion
       fetchInfo()
@@ -180,6 +186,16 @@ function Info() {
         <span>{error}</span>
       </div>
     )
+  }
+
+  async function deleteInfo(id: number) {
+    try {
+      await DeletePipe(id)
+      fetchInfo()
+    } catch (err) {
+      console.error("Failed to delete info:", err)
+      alert("Failed to delete info. Please try again.")
+    }
   }
 
 
@@ -255,8 +271,8 @@ function Info() {
                           header.getContext()
                         )}
                         {{
-                          asc: ' 🔼',
-                          desc: ' 🔽',
+                             asc: <ChevronUp className="inline-block ml-4 w-6 h-6" />,
+                             desc: <ChevronDown className="inline-block ml-4 w-6 h-6" />,
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     )}

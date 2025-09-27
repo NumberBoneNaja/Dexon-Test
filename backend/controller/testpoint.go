@@ -24,23 +24,42 @@ func getNextTpNumber(cmlID uint) (int, error) {
 	return int(lastCML.TPNumber) + 1, nil
 }
 func GetTestPointByCMLID(c *fiber.Ctx) error {
-	ID := c.Params("id")
-	if ID == "" {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"error": "ID is required",
-		})
-	}
+    ID := c.Params("id")
+    if ID == "" {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+            "error": "ID is required",
+        })
+    }
 
-	var testpoints []entity.TestPoint
-	DB := config.DB()
-	result := DB.Where("cml_id = ?", ID).Find(&testpoints)
-	if result.Error != nil {
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"error": result.Error.Error(),
-		})
-	}
-	return c.JSON(testpoints)
-	}
+    type Result struct {
+		ID            uint
+        LineNumber    string `json:"line_number"`
+        CmlNumber     int `json:"cml_number"`
+        TPNumber      uint `json:"tp_number"`
+        TPDescription string `json:"tp_description"`
+        Note          string `json:"note"`
+    }
+
+    var results []Result
+    DB := config.DB()
+    
+    // Join infos -> cmls -> test_points
+    err := DB.Table("test_points").
+        Select("test_points.id,infos.line_number, cmls.cml_number, test_points.tp_number, test_points.tp_description, test_points.note").
+        Joins("JOIN cmls ON cmls.id = test_points.cml_id").
+        Joins("JOIN infos ON infos.id = cmls.info_id").
+        Where("cmls.id = ? AND test_points.deleted_at IS NULL", ID).
+        Scan(&results).Error
+
+    if err != nil {
+        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+            "error": err.Error(),
+        })
+    }
+
+    return c.JSON(results)
+}
+
 
 func GetTestPointByID(c *fiber.Ctx) error {
 	ID := c.Params("id")
@@ -104,6 +123,7 @@ func EditTestPointByID(c *fiber.Ctx) error {
 		})
 	}
 	if err := c.BodyParser(&testpoint); err != nil {
+		fmt.Println("c.BodyParser error:", err)
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
 			"error": "Cannot parse JSON",
 		})

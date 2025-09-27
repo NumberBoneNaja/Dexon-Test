@@ -37,6 +37,7 @@ export default function EditTestPointModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("test: ",formData);
     onSubmit(formData);
   };
 

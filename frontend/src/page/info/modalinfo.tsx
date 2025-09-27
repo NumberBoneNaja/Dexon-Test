@@ -34,8 +34,8 @@ export default function InfoModal({ info, onDelete }: Props) {
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-bold text-lg">Pipeline Information Details</h3>
           <div className="flex gap-2">
-            <button className="btn btn-sm btn-primary" onClick={handleEdit}>Edit</button>
-            <button className="btn btn-sm btn-error" onClick={handleDelete}>Delete</button>
+            <button className="btn btn-sm bg-[#f1a849] text-white" onClick={handleEdit}>Edit</button>
+            <button className="btn btn-sm  text-[#EB1950]" onClick={handleDelete}>Delete</button>
           </div>
         </div>
         {info && (
@@ -49,7 +49,7 @@ export default function InfoModal({ info, onDelete }: Props) {
                     <label className="label">
                       <span className="label-text font-semibold">Line Number</span>
                     </label>
-                    <div className="text-lg font-bold text-blue-600">{info.line_number}</div>
+                    <div className="text-lg font-bold text-[#14094D]">{info.line_number}</div>
                   </div>
                   <div>
                     <label className="label">
@@ -82,7 +82,7 @@ export default function InfoModal({ info, onDelete }: Props) {
                     <label className="label">
                       <span className="label-text font-semibold">Pipe Size</span>
                     </label>
-                    <div className="badge badge-neutral">{info.pipe_size}"</div>
+                    <div className="l">{info.pipe_size}"</div>
                   </div>
                   <div>
                     <label className="label">
