@@ -29,12 +29,21 @@ func main() {
 	// cml
 	app.Get("/cml/:id", controller.GetCMLByInfoID)
 	app.Get("/cml/id/:id", controller.GetCMLByID)
+	app.Post("/cml", controller.CreateCMLByInfoID)
+	app.Patch("/cml/:id", controller.EditCMLByID)
+	app.Delete("/cml/:id", controller.DeletCMLByID)
 	// testpoint
 	app.Get("/testpoint/:id", controller.GetTestPointByCMLID)
 	app.Get("/testpoint/id/:id", controller.GetTestPointByID)
+	app.Post("/testpoint", controller.CreateTestPointByCMLID)
+	app.Patch("/testpoint/:id", controller.EditTestPointByID)
+	app.Delete("/testpoint/:id", controller.DeletTestPointByID)
 	// thickness
 	app.Get("/thickness/:id", controller.GetThicknessByTestPointID)
 	app.Get("/thickness/id/:id", controller.GetThicknessByID)
+	app.Post("/thickness", controller.CreateThicknessByTestPointID)
+	app.Patch("/thickness/:id", controller.EditThicknessByID)
+	app.Delete("/thickness/:id", controller.DeletThicknessByID)
 	
 	
 	  app.Listen("RUNNING ON " + PORT)

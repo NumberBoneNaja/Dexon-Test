@@ -65,7 +65,7 @@ func SeedInfo(db *gorm.DB) {
 			DrawingNumber:       "MDA-D-B-26001-1-0-Rev00-2011",
 			Service:             "PL",
 			Material:            "Duplex Stainless Steel",
-			InserviceDate:       time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
+			InserviceDate:      time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 			PipeSize:            6,
 			OriginalThickness:   7,
 			Stress:              20000,

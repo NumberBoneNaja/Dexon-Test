@@ -1,9 +1,14 @@
 import { createBrowserRouter } from "react-router-dom"
 import MainLayout from "../layout/mainlayout"
 import Info from "../page/info/info"
-import Cml from "../page/cml/Cml"
+
 
 import Testpoint from "../page/testpoint/testpoing"
+import AddPipe from "../page/addpip/addpipe"
+import EditPipe from "../page/editpip/editpip"
+import Cmldetail from "../page/cml/Cml"
+import Thickness from "../page/thickness/thickness"
+
 
 export const router = createBrowserRouter([
   {
@@ -13,16 +18,24 @@ export const router = createBrowserRouter([
       { index: true, element: <Info /> },
       { path: "info", element: <Info /> },
       {
-        path: "cml",
-        element: <Cml/>,
+        path: "addpipe",
+        element: <AddPipe/>,
       },
       {
-        path: "testpoint",
+        path: "editpip/:id",
+        element: <EditPipe/>,
+      },
+      {
+        path: "cml/:id",
+        element: <Cmldetail/>,
+      },
+      {
+        path: "testpoint/:id",
         element: <Testpoint/>,
       },
       {
-        path: "thickness",
-        element: <div>Thickness</div>,
+        path: "thickness/:id",
+        element: <Thickness/>,
       },
       {
         path: "*",

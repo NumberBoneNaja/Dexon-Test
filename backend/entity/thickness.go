@@ -8,8 +8,8 @@ import (
 
 type Thickness struct {
     gorm.Model
-    TestPointID     uint     // FK to TestPoint
-	TestPoint      TestPoint `gorm:"foreignKey:TestPointID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
-    InspectionDate  time.Time `gorm:"column:inspection_date;type:date"`
-    ActualThickness int       `gorm:"column:actual_thickness"`
+    TestPointID     uint    `json:"test_point_id"` // FK to TestPoint
+	TestPoint      TestPoint `gorm:"foreignKey:TestPointID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"testpoint"`
+    InspectionDate  time.Time `gorm:"column:inspection_date;type:date" json:"inspection_date"`
+    ActualThickness int       `gorm:"column:actual_thickness" json:"actual_thickness"`
 }
