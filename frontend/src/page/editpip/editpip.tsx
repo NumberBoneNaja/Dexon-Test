@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { EditPipeline, getInfoByID, NewPipe } from '../../service/info';
 import type { IInfo } from '../../interface/info';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ChevronLeft } from 'lucide-react';
 
 
 
@@ -102,7 +103,9 @@ const EditPipe: React.FC = () => {
         {/* Header */}
         <div className="p-6 rounded-t-lg">
           <h1 className="text-3xl font-bold text-center">แก้ไข Pipeline</h1>
-         
+          <button className=" gap-2 text-[#EB1950] bg-gray-100 rounded-2xl p-2 " onClick={() => navigate(-1)}>
+        <ChevronLeft className="w-8 h-8" />
+        </button>
         </div>
 
         {/* Form */}

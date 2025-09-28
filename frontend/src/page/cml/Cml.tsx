@@ -63,7 +63,7 @@ function Cmldetail() {
       console.log("ID:", id);
       const res = await getcmlbyinfoID(Number(id));
       console.log("CML Data:", res);
-      setCmlData(res);
+      setCmlData(res || []); 
     
     } catch (error) {
       console.error("Error fetching CML data:", error);
@@ -260,7 +260,7 @@ function Cmldetail() {
           <h2 className="text-2xl font-bold mb-4">
             Line Number:{" "}
             <span className="text-[#EB1950] font-extrabold">
-              {cmlData[0].line_number}
+            {cmlData.length > 0 ? cmlData[0].line_number : "This pipeline is empty" }
             </span>
           </h2>
          
